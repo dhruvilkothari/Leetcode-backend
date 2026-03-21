@@ -6,16 +6,22 @@ export interface IProblemRepository {
     getProblems(options?: { skip?: number; limit?: number }): Promise<{problems:IProblem[], total: number}>;
     updateProblem(id: string, updateData: Partial<IProblem>): Promise<IProblem | null>;
     deleteProblem(id: string): Promise<void>;
-    findProblemsByDifficulty(difficulty: "Easy" | "Medium" | "Hard", options: { skip?: number; limit?: number }): Promise<IProblem[]>;
-    searchProblems(query: string, options: { skip?: number; limit?: number }): Promise<IProblem[]>;
+    findProblemsByDifficulty(difficulty: "Easy" | "Medium" | "Hard", options?: { skip?: number; limit?: number }): Promise<IProblem[]>;
+    searchProblems(query: string, options?: { skip?: number; limit?: number }): Promise<IProblem[]>;
 }
 
 // Mock database
 
 
 export class ProblemRepository implements IProblemRepository {
+
+    constructor(){
+        
+    }
+
     async createProblem(problem: IProblem): Promise<IProblem> {
         const newProblem = new Problem(problem);
+        console.log(newProblem);
         return await newProblem.save();
         
     }

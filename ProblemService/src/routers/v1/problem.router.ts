@@ -1,23 +1,25 @@
 import express from 'express';
-import { validateRequestBody } from '../../validators';
+import { validateRequestBody, validateRequestParams } from '../../validators';
 
-import { createProblemDto } from '../../validators/problem.validator';
-import { ProblemRepository } from '../../repository/problem.repository';
-import { ProblemService } from '../../service/problem.service';
+import { createProblemDto, findByDifficulty, updateProblemDto } from '../../validators/problem.validator';
 import { ProblemController } from '../../controllers/proble.controller';
-
-
-const problemRepository = new ProblemRepository(); // You should implement this
-const problemService = new ProblemService(problemRepository); // You should implement this
-const problemController = new ProblemController(problemService); // You should implement this
 
 const problemRouter = express.Router();
 
-problemRouter.post('/', validateRequestBody(createProblemDto), problemController.cr); // TODO: Resolve this TS compilation issue
+problemRouter.post('/', validateRequestBody(createProblemDto), ProblemController.createProblem); // TODO: Resolve this TS compilation issue
 
-problemRouter.get('/:id', problemController.getProblemById);
+problemRouter.get('/:id', ProblemController.getProblemById);
 
 
+problemRouter.get('/', ProblemController.getProblems);
+
+problemRouter.put('/:id', validateRequestBody(updateProblemDto), ProblemController.updateProblem);
+
+problemRouter.delete('/:id', ProblemController.deleteProblem);
+
+problemRouter.get('/diffculty/:diffculty',validateRequestParams(findByDifficulty), ProblemController.findProblemsByDifficulty);
+
+problemRouter.get('/search', ProblemController.searchProblems);
 
 
 

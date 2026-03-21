@@ -21,6 +21,16 @@ export const updateProblemDto = z.object({
     })).min(1, 'At least one test case is required').optional(),
 });
 
+export const findByDifficulty = z.object({
+    diffculty: z.enum(['Easy', 'Medium', 'Hard'])
+});
+
+export const searchProblemSchema = z.object({
+    query: z.string().min(1)
+})
+
 
 export type CreateProblemDto = z.infer<typeof createProblemDto>;
 export type UpdateProblemDto = z.infer<typeof updateProblemDto>;
+
+// export type 

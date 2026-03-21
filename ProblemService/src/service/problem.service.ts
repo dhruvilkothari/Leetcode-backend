@@ -67,11 +67,11 @@ export class ProblemService implements IProblemService {
         return await this.problemRepository.deleteProblem(id);
     }
 
-    async findProblemsByDifficulty(difficulty: "Easy" | "Medium" | "Hard", options: { skip?: number; limit?: number }): Promise<IProblem[]> {
+    async findProblemsByDifficulty(difficulty: "Easy" | "Medium" | "Hard", options?: { skip?: number; limit?: number }): Promise<IProblem[]> {
         return await this.problemRepository.findProblemsByDifficulty(difficulty, options);
     }
 
-    async searchProblems(query: string, options: { skip?: number; limit?: number }): Promise<IProblem[]> {
+    async searchProblems(query: string, options?: { skip?: number; limit?: number }): Promise<IProblem[]> {
         if(!query || query.trim() === "") {
             throw new BadRequestError("Search query cannot be empty");
         }

@@ -1,4 +1,4 @@
-import { marked } from "marked";
+const { marked } = require("marked");
 import sanitizeHtml from "sanitize-html";
 import TurnDown from "turndown";
 
