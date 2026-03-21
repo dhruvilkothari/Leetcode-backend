@@ -1,17 +1,17 @@
-import { ICreateProblemDTO, IUpdateProblemDTO } from "../dtos/problem.dto";
+import { CreateProblemDto, UpdateProblemDto } from "../validators/problem.validator";
 import { IProblem } from "../models/problem.model";
 import { IProblemRepository } from "../repository/problem.repository";
 import { BadRequestError, NotFoundError } from "../utils/errors/app.error";
 import { sanitizeMarkdown } from "../utils/markdown.sanitize";
 
 export interface IProblemService {
-    createProblem(problem: ICreateProblemDTO): Promise<IProblem>;
+    createProblem(problem: CreateProblemDto): Promise<IProblem>;
     getProblemById(id: string): Promise<IProblem | null>;
     getProblems(options?: { skip?: number; limit?: number }): Promise<{problems:IProblem[], total: number}>;
-    updateProblem(id: string, updateData: IUpdateProblemDTO): Promise<IProblem | null>;
+    updateProblem(id: string, updateData: UpdateProblemDto): Promise<IProblem | null>;
     deleteProblem(id: string): Promise<void>;
-    findProblemsByDifficulty(difficulty: "Easy" | "Medium" | "Hard", options: { skip?: number; limit?: number }): Promise<IProblem[]>;
-    searchProblems(query: string, options: { skip?: number; limit?: number }): Promise<IProblem[]>;
+    findProblemsByDifficulty(difficulty: "Easy" | "Medium" | "Hard", options?: { skip?: number; limit?: number }): Promise<IProblem[]>;
+    searchProblems(query: string, options?: { skip?: number; limit?: number }): Promise<IProblem[]>;
 }
 
 export class ProblemService implements IProblemService {
@@ -20,10 +20,10 @@ export class ProblemService implements IProblemService {
         this.problemRepository = problemRepository;
     }
 
-    async createProblem(problem: ICreateProblemDTO): Promise<IProblem> {
+    async createProblem(problem: CreateProblemDto): Promise<IProblem> {
         //sanitize and validate input here if needed
 
-        const santizedPayload: ICreateProblemDTO = {
+        const santizedPayload: CreateProblemDto = {
             ...problem,
             description: await sanitizeMarkdown(problem.description),
             editorial: problem.editorial ? await sanitizeMarkdown(problem.editorial) : undefined
@@ -44,7 +44,7 @@ export class ProblemService implements IProblemService {
         return await this.problemRepository.getProblems(options);
     }
 
-    async updateProblem(id: string, updateData: IUpdateProblemDTO): Promise<IProblem | null> {
+    async updateProblem(id: string, updateData: UpdateProblemDto): Promise<IProblem | null> {
         const problem: IProblem | null = await this.problemRepository.getProblemById(id);
         if(!problem) {
             throw new NotFoundError(`Problem with id ${id} not found`);
