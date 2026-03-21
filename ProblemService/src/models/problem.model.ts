@@ -38,7 +38,7 @@ const problemSchema = new mongoose.Schema<IProblem>({
 problemSchema.index({ title: 1 }, { unique: true });
 problemSchema.index({ difficulty: 1 });
 
-const Problem = mongoose.model<IProblem>("Problem", problemSchema);
+export const Problem = mongoose.model<IProblem>("Problem", problemSchema);
 
-export default Problem;
+
 
