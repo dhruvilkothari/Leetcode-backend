@@ -16,6 +16,6 @@ redisClient.on('error', (error)=>{
     logger.info("Redis Disconnected", error);
 });
 
-export const createNewRedisConnection = async()=>{
+export const createNewRedisConnection = ()=>{
     return new Redis(redisConfif);
 }

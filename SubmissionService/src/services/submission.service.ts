@@ -1,5 +1,7 @@
+import { getProblemById } from "../apis/problem.apis";
 import logger from "../config/logger.config";
 import { ISubmission, ISubmissionData, SubmissionStatus } from "../models/subbmission.model";
+import { addSubmissionJob } from "../producer/submission.producer";
 import { ISubmissionRepository } from "../repository/submission.repository";
 import { BadRequestError, NotFoundError } from "../utils/errors/app.error";
 
@@ -45,7 +47,7 @@ export class SubmissionService implements ISubmissionService {
 
         // submission to redis queue
         const jobId = await addSubmissionJob({
-            submissionId: submission.id,
+            submissionId: submission._id.toString(),
             problem,
             code: submissionData.code,
             language: submissionData.language
