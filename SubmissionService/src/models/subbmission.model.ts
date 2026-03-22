@@ -1,59 +1,58 @@
-import mongoose, { Document } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 
 export enum SubmissionStatus {
-    PENDING = "PENDING",
-    ACCEPTED = "ACCEPTED",
-    WRONG_ANSWER = "WRONG_ANSWER",
-    RUNTIME_ERROR = "RUNTIME_ERROR",
-    TIME_LIMIT_EXCEEDED = "TIME_LIMIT_EXCEEDED"
+    COMPLETED = "completed",
+    PENDING = "pending",
 }
 
-export enum Language {
-  CPP = "cpp",
-  PYTHON = "python",
-  JAVA = "java",
-  JAVASCRIPT = "javascript",
-  TYPESCRIPT = "typescript"
+export enum SubmissionLanguage {
+    CPP = "cpp",
+    PYTHON = "python",
+}
+
+export interface ISubmissionData {
+    testCaseId: string;
+    status: string;
 }
 export interface ISubmission extends Document {
     problemId: string;
     code: string;
-    language: Language;
+    language: SubmissionLanguage;
     status: SubmissionStatus;
+    submissionData: ISubmissionData;
     createdAt: Date;
-    updatedAt: Date; 
+    updatedAt: Date;
 }
 
-const submissionSchema = new mongoose.Schema<ISubmission>(
-  {
-    problemId: {
-      type: String,
-      required: [true, "Problem Id Is Required"],
+const submissionSchema = new Schema<ISubmission>({
+    problemId: { 
+        type: String, 
+        required: [true, "Problem Id required for the submission"] 
     },
-    code: {
-      type: String,
-      required: [true, "Code is Required"],
+    code: { 
+        type: String, 
+        required: [true, "Code is required for evaluation"] 
     },
-    language: {
-      type: String,
-      required: [true, "Language is Required"],
-      enum: Object.values(Language)
+    language: { 
+        type: String, 
+        required: [true, "Language is required for evaluation"],
+        enum: Object.values(SubmissionLanguage)
     },
-    status: {
-      type: String,
-      enum: Object.values(SubmissionStatus),
-      default: SubmissionStatus.PENDING,
+    status: { 
+        type: String, 
+        required: true, 
+        default: SubmissionStatus.PENDING,
+        enum: Object.values(SubmissionStatus)
     },
-  },
-  {
-    timestamps: true, // automatically adds createdAt & updatedAt
-  }
-);
+    submissionData: {
+        type: Object,
+        required: true,
+        default: {}
+    }
+}, {
+    timestamps: true,
+});
 
-submissionSchema.index({ problemId: 1, createdAt: -1 });
+submissionSchema.index({ status: 1, createdAt: -1 });
 
-
-export const Submission = mongoose.model<ISubmission>(
-  "Submission",
-  submissionSchema
-);
+export const Submission = model<ISubmission>("Submission", submissionSchema);

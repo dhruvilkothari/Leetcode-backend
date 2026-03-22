@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 
 type ServerConfig = {
     PORT: number,
-    DB_URL: string
+    DB_URL: string,
+    PROBLEM_SERVICE: string
 }
 
 function loadEnv() {
@@ -15,5 +16,6 @@ loadEnv();
 
 export const serverConfig: ServerConfig = {
     PORT: Number(process.env.PORT) || 3001,
-    DB_URL: process.env.DB_URL as string
+    DB_URL: process.env.DB_URL as string,
+    PROBLEM_SERVICE: process.env.PROBLEM_SERVICE || "http://localhost:3000/api/v1"
 };
